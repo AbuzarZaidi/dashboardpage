@@ -1,12 +1,17 @@
 .donut-inner {
     margin-top: -100px;
     margin-bottom: 100px;
+    text-align: center;
+    padding: 2px;
   }
   .donut-inner h5 {
-    margin-bottom: 5px;
-    margin-top: 20px;
-    margin-left: 30px;
+    font-size: 32px;
+    margin-bottom: 2px;
+    margin-top: 2px;
+    /* margin-left: 50px; */
   }
   .donut-inner span {
-    font-size: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    /* margin-left: 35px; */
   }

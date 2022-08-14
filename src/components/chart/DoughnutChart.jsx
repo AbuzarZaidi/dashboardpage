@@ -23,10 +23,10 @@ ChartJs.register(
 //   ], 
 // };
 
-const DoughnutChart = ({color}) => {
+const DoughnutChart = ({color,percentage,tagline}) => {
     const [data, setData] = useState({
         datasets: [{
-            data: [90,10],
+            data: [percentage,100-percentage],
             backgroundColor:[
               color,
               'white',
@@ -84,9 +84,10 @@ const DoughnutChart = ({color}) => {
          <div className="App" style={{width:'150px', height:'150px'}}>
         
           <Doughnut data={data} options={lightOptions}/>
-          <div className="donut-inner">
-        <h5>production</h5>
-        {/* <span>(30 / 25 st)</span> */}
+          <div className="donut-inner" >
+        <h5 style={{color:color}}>{percentage}%</h5>
+        <span style={{color:color,whiteSpace: "wrap",overflow: "hidden" ,
+        textOverflow: "clip"}}>{tagline}</span>
     </div>
              </div>
       );

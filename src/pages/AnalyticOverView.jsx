@@ -1,11 +1,7 @@
-
 import React,{useState} from 'react'
 import './AnalyticOverview.css'
-// import Donut1 from '../components/chart/Donut1'
 import Chart from 'chart.js/auto';
 import DoughnutChart from '../components/chart/DoughnutChart';
-import DoughnutChart2 from '../components/chart/DoughnutChart2';
-
 import LineChart from '../components/LineChart'
 import { UserData } from "../Data";
 const AnalyticOverView = () => {
@@ -37,41 +33,26 @@ const AnalyticOverView = () => {
         <h1 className="heading">Analytic Overview</h1>
         <div style={{display:"flex"}}>
          
-        <DoughnutChart color="#5378FC"/>
-        <DoughnutChart color="#BC5AEA"/>
-        <DoughnutChart color="#5FC9C9"/>
-        <DoughnutChart color="#4846C0"/>
-         {/* <DoughnutChart2/> */}
-         
-         {/* <div> <DoughnutChart/></div>
-         <div> <DoughnutChart/></div> */}
-       
-     {/* <DoughnutChart2/> */}
-         
-         
-       
-        {/* {/* <Donut1  val={10} /> */}
-        {/* <Donut1  val={30} />
-        <Donut1  val={70} />
-        <Donut1  val={90} />  */}
-       {/* <Donut2 val={70}/>
-       <Donut2 val={90}/>
-       <Donut2 val={100}/> */}
+        <DoughnutChart color="#5378FC" percentage={99} tagline="Production target met"/>
+        <DoughnutChart color="#BC5AEA" percentage={88} tagline="Machine uptime"/>
+        <DoughnutChart color="#5FC9C9" percentage={38} tagline="Raw material"/>
+        <DoughnutChart color="#4846C0"percentage={14} tagline="Productivity " />
+        
 
 
         </div>
         </div>
  <div className="dataShowing" style={{marginLeft:"90px",marginTop:"20px"}}>
     <div className='' style={{display:"flex"}}>
- <div style={{marginRight:"40px"}}>
-    <div style={{display:"flex",height:"56px"}}>
+ <div style={{marginRight:"40px",marginTop:"20px"}}>
+    <div style={{display:"flex",height:"46px"}}>
  <h2 className="font20">20</h2>
  <h2 className="per20">15.5% .</h2>
  </div>
     <p className="selection">Today's total escalation</p>
  </div>
- <div>
-    <div style={{display:"flex",height:"56px"}}>
+ <div style={{marginTop:"20px"}}>
+    <div style={{display:"flex",height:"46px"}}>
  <h2 className="font20">20</h2>
  <h2 className="font20">hr</h2>
  </div>
@@ -107,11 +88,17 @@ const AnalyticOverView = () => {
    <div style={{width:"600px",height:"300px"}}>
 <LineChart chartData={userData} />
     </div></div>
-<div className='errorSection'style={{width:"294px",marginRight:"7%",display:"flex"}}>
+<div className='errorSection'style={{width:"294px",height:"300px",marginRight:"7%",display:"flex"}}>
    <div style={{padding:"25px",fontSize:"16px"}}>
-   <p style={{color:"#E52525"}}>Factory 1 has critical issue. It dip 45% to previous month</p>
-   <p style={{color:"#073170"}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dolor sit amet, consectetur adipiscing elit.</p>
+   <p style={{color:"#E52525"}}> <span style={{backgroundColor:"#E52525",width:"5px",height:"5px"}}>..</span> Factory 1 has critical issue. It dip 45% to previous month</p>
+   <div >
+   
+   
+   <p style={{color:"#073170"}}><span style={{backgroundColor:"#073170",width:"10px",height:"10px"}}>..</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dolor sit amet, consectetur adipiscing elit.</p>
+  
    </div>
+   </div>
+   
   
  
 </div>
