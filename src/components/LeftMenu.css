@@ -1,0 +1,29 @@
+.Menu{
+    width:111px;
+    height:1024px;
+    background-color:#073170;
+}
+.Logo{position: absolute;
+    width: 57px;
+    height: 57px;
+    left: 27px;
+    top: 45px;
+    background-color:#FFFFFF;
+    border-radius:50px;
+    display:flex;
+    justify-content:center;
+    }
+ .menuIcons{
+    position: absolute;
+    display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  top: 25%;
+  left: 2.85%;
+  right: 95%;
+ }   
+ .icon{
+    margin-top: 30px;
+    color: #5378FC;
+ }
+
