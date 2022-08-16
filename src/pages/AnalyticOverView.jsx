@@ -3,12 +3,10 @@ import './AnalyticOverview.css'
 import Chart from 'chart.js/auto';
 import DoughnutChart from '../components/chart/DoughnutChart';
 import LineChart from '../components/LineChart'
-import LineChartModal from '../components/Modal.jsx/LineChartModal';
-import { UserData } from "../Data";
+import { UserData,User2Data,User3Data } from "../Data";
 
 const AnalyticOverView = () => {
-   const[modalOpen,setModalOpen]=useState(true)
-   const[showModal,setShowModal]=useState(false)
+const [show,setShow]=useState(false)
    const [userData, setUserData] = useState({
       labels: UserData.map((data) => data.year),
       datasets: [
@@ -22,15 +20,82 @@ const AnalyticOverView = () => {
             "#f3ba2f",
             "#2a71d0",
           ],
-          borderColor: "black",
+          borderColor: "rgb(102,206,207)",
           borderWidth: 2,
         },
+        
       ],
     });
-    const openModalHandler=()=>{
-      setShowModal(!showModal)
-
-    }
+   const chartHandler=()=>{
+      setShow(true)
+      setUserData( {
+         labels: UserData.map((data) => data.year),
+         datasets: [
+           {
+             label: "Users Gained",
+             data: UserData.map((data) => data.userGain),
+             backgroundColor: [
+               "rgba(75,192,192,1)",
+               "#ecf0f1",
+               "#50AF95",
+               "#f3ba2f",
+               "#2a71d0",
+             ],
+             borderColor: "rgb(102,206,207)",
+             borderWidth: 2,
+           },
+           {
+            label: "Users Gained",
+            data: User2Data.map((data) => data.userGain),
+            backgroundColor: [
+              "rgb(215, 112, 95)",
+              "#ecf0f1",
+              "#50AF95",
+              "#f3ba2f",
+              "#2a71d0",
+            ],
+            borderColor: "rgb(83,120,252)",
+            borderWidth: 2,
+          },
+          {
+            label: "Users Gained",
+            data: User3Data.map((data) => data.userGain),
+            backgroundColor: [
+              "rgb(215, 112, 95)",
+              "#ecf0f1",
+              "#50AF95",
+              "#f3ba2f",
+              "#2a71d0",
+            ],
+            borderColor: "rgb(72,70,192)",
+            borderWidth: 2,
+          },
+         ],
+       })
+       setShow(true)
+   }
+   const backButtonHandler=()=>{
+      setUserData({
+         labels: UserData.map((data) => data.year),
+         datasets: [
+           {
+             label: "Users Gained",
+             data: UserData.map((data) => data.userGain),
+             backgroundColor: [
+               "rgba(75,192,192,1)",
+               "#ecf0f1",
+               "#50AF95",
+               "#f3ba2f",
+               "#2a71d0",
+             ],
+             borderColor: "rgb(102,206,207)",
+             borderWidth: 2,
+           },
+           
+         ],
+       })
+       setShow(false)
+   }
   return (
     <>
      
@@ -89,13 +154,15 @@ const AnalyticOverView = () => {
   
  </div>
 
-   <p className='heading' style={{marginLeft:"60px",marginTop:"5px",marginBottom:"5px"}}>Organization production dip trend (Lower the better)</p>
+   <p className='heading' style={{marginLeft:"60px",marginTop:"5px",marginBottom:"5px"}}>
+      
+   {show&&<img src="images/backButton.png"  alt="" style={{width:"25px",height:"25px",marginTop:"10px"}}
+   onClick={backButtonHandler}/>}   Organization production dip trend (Lower the better)</p>
 
    <div className='SecondSection'> 
 <div className="lineChartSection" style={{marginLeft:"5%",marginRight:"5%",width:"900px",height:"300px",display:"flex",justifyContent:"center"}}>
-   <div style={{width:"600px",height:"300px"}} onClick={openModalHandler}>
+   <div style={{width:"600px",height:"300px"}} onClick={chartHandler}>
 <LineChart chartData={userData} />
-{showModal&&<LineChartModal userData={userData} openModal={modalOpen}/>}
     </div>
     
     </div>
