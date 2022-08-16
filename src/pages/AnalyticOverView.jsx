@@ -3,8 +3,12 @@ import './AnalyticOverview.css'
 import Chart from 'chart.js/auto';
 import DoughnutChart from '../components/chart/DoughnutChart';
 import LineChart from '../components/LineChart'
+import LineChartModal from '../components/Modal.jsx/LineChartModal';
 import { UserData } from "../Data";
+
 const AnalyticOverView = () => {
+   const[modalOpen,setModalOpen]=useState(true)
+   const[showModal,setShowModal]=useState(false)
    const [userData, setUserData] = useState({
       labels: UserData.map((data) => data.year),
       datasets: [
@@ -23,6 +27,10 @@ const AnalyticOverView = () => {
         },
       ],
     });
+    const openModalHandler=()=>{
+      setShowModal(!showModal)
+
+    }
   return (
     <>
      
@@ -85,9 +93,12 @@ const AnalyticOverView = () => {
 
    <div className='SecondSection'> 
 <div className="lineChartSection" style={{marginLeft:"5%",marginRight:"5%",width:"900px",height:"300px",display:"flex",justifyContent:"center"}}>
-   <div style={{width:"600px",height:"300px"}}>
+   <div style={{width:"600px",height:"300px"}} onClick={openModalHandler}>
 <LineChart chartData={userData} />
-    </div></div>
+{showModal&&<LineChartModal userData={userData} openModal={modalOpen}/>}
+    </div>
+    
+    </div>
 <div className='errorSection'style={{width:"294px",height:"300px",marginRight:"7%",display:"flex"}}>
    <div style={{padding:"25px",fontSize:"16px"}}>
    <p style={{color:"#E52525"}}> <span style={{backgroundColor:"#E52525",width:"5px",height:"5px"}}>..</span> Factory 1 has critical issue. It dip 45% to previous month</p>
@@ -104,7 +115,7 @@ const AnalyticOverView = () => {
 </div>
    </div>
    </div>
-   
+ 
     </>
   )
 }
