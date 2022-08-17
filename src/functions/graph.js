@@ -10,7 +10,7 @@ export const readGraphData = async () => {
 
   export const readDataById= async (dataId) => {
     try {
-      const { data } = await api.readData(dataId);
+      const { data } = await api.readDataById(dataId);
       return data;
     } catch (error) {
       console.log(error);

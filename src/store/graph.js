@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-const initialGraphState = { lineGraph: {}, insights: [], heading: "",lineChartResponse:{} };
+const initialGraphState = { lineGraph: {}, insights: [], heading: "" };
 const graphSlice = createSlice({
   name: "cart",
   initialState: initialGraphState,
@@ -13,10 +13,8 @@ const graphSlice = createSlice({
     setHeadingHandler(state, action) {
       state.heading = action.payload;
     },
-    setResponseHandler(state, action) {
-        state.lineChartResponse = action.payload;
-      },
+   
   },
 });
-export const { setLineGraphHandler, setinsightsHandler,setHeadingHandler,setResponseHandler } = graphSlice.actions;
+export const { setLineGraphHandler, setinsightsHandler,setHeadingHandler } = graphSlice.actions;
 export default graphSlice.reducer;

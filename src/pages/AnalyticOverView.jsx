@@ -5,35 +5,32 @@ import {
   setLineGraphHandler,
   setinsightsHandler,
   setHeadingHandler,
-  setResponseHandler
 } from "../store/graph";
 import Chart from "chart.js/auto";
 import DoughnutChart from "../components/chart/DoughnutChart";
 import LineChart from "../components/LineChart";
-const { readGraphData,readDataById } = require("../functions/graph");
+const { readGraphData, readDataById } = require("../functions/graph");
 const AnalyticOverView = () => {
   const dispatch = useDispatch();
-  // const lineChartResponse = useSelector((state) => state.lineChartResponse);
   const graphData = useSelector((state) => state.graphData.lineGraph);
   const insights = useSelector((state) => state.graphData.insights);
   const heading = useSelector((state) => state.graphData.heading);
   const [show, setShow] = useState(false);
+
   const [showGraph, setShowGraph] = useState(false);
   const [userData, setUserData] = useState({});
-  const [Options,setOptions] = useState({});
+  const [Options, setOptions] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       const result = await readGraphData();
-      
       dispatch(setinsightsHandler(result.insights));
-      dispatch (setResponseHandler(result));
       dispatch(setHeadingHandler(result.heading));
-      
+
       const graphData = result.data.map((val) => {
         return {
           label: val.id,
           data: val.line.map((data) => data.y),
-          
+
           borderColor: val.color,
           borderWidth: 2,
         };
@@ -43,46 +40,68 @@ const AnalyticOverView = () => {
         datasets: graphData,
       };
       setUserData(graph);
-      dispatch(setLineGraphHandler(graph));
       setOptions({
-        onClick: async(e, elements) => {
-            console.log("working")
-            const index=elements[0].datasetIndex;
-            setShowGraph(false)
-            const newresult = await readDataById(result.data[index].id);
-            console.log(newresult)
-            const graphData = newresult.data.map((val) => {
-              return {
-                label: val.id,
-                data: val.line.map((data) => data.y),
-              
-                borderColor: val.color,
-                borderWidth: 2,
-              };
-            });
-            const graph = {
-              labels: newresult.data[0].line.map((data) => data.x),
-              datasets: graphData,
-            };
-            setUserData(graph);
-            dispatch(setLineGraphHandler(graph));
+        onClick: async (e, elements) => {
+          
+          const index = elements[0].datasetIndex;
+          setShowGraph(false);
+          const newresult = await readDataById(result.data[index].id);
+          dispatch(setHeadingHandler(newresult.heading));
+          dispatch(setinsightsHandler(newresult.insights));
         
-            setShowGraph(true)
-            setShow(true)
+          const graphData = newresult.data.map((val) => {
+            return {
+              label: val.id,
+              data: val.line.map((data) => data.y),
+
+              borderColor: val.color,
+              borderWidth: 2,
+            };
+          });
+          const graph = {
+            labels: newresult.data[0].line.map((data) => data.x),
+            datasets: graphData,
+          };
+          setUserData(graph);
+          dispatch(setLineGraphHandler(graph));
+
+          setShowGraph(true);
+          setShow(true);
         },
-      })
+      });
     };
     fetchData();
     setTimeout(() => {
       setShowGraph(true);
     }, 500);
   }, [dispatch]);
- 
-  const backButtonHandler = () => {
-    setUserData(graphData);
+
+  const backButtonHandler = async () => {
+    setShowGraph(false);
+    const result = await readGraphData();
+    dispatch(setHeadingHandler(result.heading));
+    dispatch(setinsightsHandler(result.insights));
+
+    const graphData = result.data.map((val) => {
+      return {
+        label: val.id,
+        data: val.line.map((data) => data.y),
+
+        borderColor: val.color,
+        borderWidth: 2,
+      };
+    });
+    const graph = {
+      labels: result.data[0].line.map((data) => data.x),
+      datasets: graphData,
+    };
+    setUserData(graph);
+    dispatch(setLineGraphHandler(graph));
+
+    setShowGraph(true);
     setShow(false);
   };
- 
+
   return (
     <>
       <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -182,9 +201,11 @@ const AnalyticOverView = () => {
           >
             <div
               style={{ width: "600px", height: "300px" }}
-              // onClick={chartHandler}
+              
             >
-              {showGraph && <LineChart chartData={userData}  OptionsVal={Options}/>}
+              {showGraph && (
+                <LineChart chartData={userData} OptionsVal={Options} />
+              )}
             </div>
           </div>
           <div
@@ -198,7 +219,7 @@ const AnalyticOverView = () => {
           >
             <div style={{ padding: "25px", fontSize: "16px" }}>
               {showGraph &&
-                insights.map((val,ind) => {
+                insights.map((val, ind) => {
                   return (
                     <p style={{ color: val.color }} key={ind}>
                       {" "}
