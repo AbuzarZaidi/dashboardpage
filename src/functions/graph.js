@@ -7,3 +7,12 @@ export const readGraphData = async () => {
       console.log(error);
     }
   };
+
+  export const readDataById= async (dataId) => {
+    try {
+      const { data } = await api.readData(dataId);
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };

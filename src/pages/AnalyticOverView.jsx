@@ -1,141 +1,88 @@
 import React, { useState, useEffect } from "react";
 import "./AnalyticOverview.css";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setLineGraphHandler,
+  setinsightsHandler,
+  setHeadingHandler,
+  setResponseHandler
+} from "../store/graph";
 import Chart from "chart.js/auto";
 import DoughnutChart from "../components/chart/DoughnutChart";
 import LineChart from "../components/LineChart";
-import { UserData, User2Data, User3Data } from "../Data";
-const { readGraphData } = require("../functions/graph");
+const { readGraphData,readDataById } = require("../functions/graph");
 const AnalyticOverView = () => {
+  const dispatch = useDispatch();
+  // const lineChartResponse = useSelector((state) => state.lineChartResponse);
+  const graphData = useSelector((state) => state.graphData.lineGraph);
+  const insights = useSelector((state) => state.graphData.insights);
+  const heading = useSelector((state) => state.graphData.heading);
   const [show, setShow] = useState(false);
-  const [insights, setInsights] = useState([]);
-  const [lineGraph, setLineGraph] = useState([]);
-  const [showGraph,setShowGraph]=useState(false)
-  const [userData, setUserData] = useState({})
-  // const [userData, setUserData] = useState({
-  //   labels: lineGraph.line.map((data) => data.x),
-  //   datasets: [
-  //     {
-  //       label: "Users Gained",
-  //       data: UserData.map((data) => data.userGain),
-  //       backgroundColor: [
-  //         "rgba(75,192,192,1)",
-  //         "#ecf0f1",
-  //         "#50AF95",
-  //         "#f3ba2f",
-  //         "#2a71d0",
-  //       ],
-  //       borderColor: "rgb(102,206,207)",
-  //       borderWidth: 2,
-  //     },
-  //   ],
-  // });
+  const [showGraph, setShowGraph] = useState(false);
+  const [userData, setUserData] = useState({});
+  const [Options,setOptions] = useState({});
   useEffect(() => {
-    
     const fetchData = async () => {
       const result = await readGraphData();
-    
-      setInsights(result.insights);
-      const graphData=result.data.map((val)=>{
-       
-       return{
-        label: "Dip Trend",
-         data: val.line.map((data) => data.y),
-        backgroundColor: [
-          "rgba(75,192,192,1)",
-          "#ecf0f1",
-          "#50AF95",
-          "#f3ba2f",
-          "#2a71d0",
-        ],
-        borderColor: "rgb(102,206,207)",
-        borderWidth: 2,
-      }    
+      
+      dispatch(setinsightsHandler(result.insights));
+      dispatch (setResponseHandler(result));
+      dispatch(setHeadingHandler(result.heading));
+      
+      const graphData = result.data.map((val) => {
+        return {
+          label: val.id,
+          data: val.line.map((data) => data.y),
+          
+          borderColor: val.color,
+          borderWidth: 2,
+        };
       });
-      const graph={
+      const graph = {
         labels: result.data[0].line.map((data) => data.x),
-        datasets: graphData
-      }
-      console.log(graphData)
-      setUserData(
-        graph
-      )
-      setLineGraph(result.data)
+        datasets: graphData,
+      };
+      setUserData(graph);
+      dispatch(setLineGraphHandler(graph));
+      setOptions({
+        onClick: async(e, elements) => {
+            console.log("working")
+            const index=elements[0].datasetIndex;
+            setShowGraph(false)
+            const newresult = await readDataById(result.data[index].id);
+            console.log(newresult)
+            const graphData = newresult.data.map((val) => {
+              return {
+                label: val.id,
+                data: val.line.map((data) => data.y),
+              
+                borderColor: val.color,
+                borderWidth: 2,
+              };
+            });
+            const graph = {
+              labels: newresult.data[0].line.map((data) => data.x),
+              datasets: graphData,
+            };
+            setUserData(graph);
+            dispatch(setLineGraphHandler(graph));
+        
+            setShowGraph(true)
+            setShow(true)
+        },
+      })
     };
     fetchData();
     setTimeout(() => {
-      setShowGraph(true)
+      setShowGraph(true);
     }, 500);
-    
-  }, []);
-  const chartHandler = () => {
-    setShow(true);
-    setUserData({
-      labels: UserData.map((data) => data.year),
-      datasets: [
-        {
-          label: "Users Gained",
-          data: UserData.map((data) => data.userGain),
-          backgroundColor: [
-            "rgba(75,192,192,1)",
-            "#ecf0f1",
-            "#50AF95",
-            "#f3ba2f",
-            "#2a71d0",
-          ],
-          borderColor: "rgb(102,206,207)",
-          borderWidth: 2,
-        },
-        {
-          label: "Users Gained",
-          data: User2Data.map((data) => data.userGain),
-          backgroundColor: [
-            "rgb(215, 112, 95)",
-            "#ecf0f1",
-            "#50AF95",
-            "#f3ba2f",
-            "#2a71d0",
-          ],
-          borderColor: "rgb(83,120,252)",
-          borderWidth: 2,
-        },
-        {
-          label: "Users Gained",
-          data: User3Data.map((data) => data.userGain),
-          backgroundColor: [
-            "rgb(215, 112, 95)",
-            "#ecf0f1",
-            "#50AF95",
-            "#f3ba2f",
-            "#2a71d0",
-          ],
-          borderColor: "rgb(72,70,192)",
-          borderWidth: 2,
-        },
-      ],
-    });
-    setShow(true);
-  };
+  }, [dispatch]);
+ 
   const backButtonHandler = () => {
-    setUserData({
-      labels: UserData.map((data) => data.year),
-      datasets: [
-        {
-          label: "Users Gained",
-          data: UserData.map((data) => data.userGain),
-          backgroundColor: [
-            "rgba(75,192,192,1)",
-            "#ecf0f1",
-            "#50AF95",
-            "#f3ba2f",
-            "#2a71d0",
-          ],
-          borderColor: "rgb(102,206,207)",
-          borderWidth: 2,
-        },
-      ],
-    });
+    setUserData(graphData);
     setShow(false);
   };
+ 
   return (
     <>
       <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -218,7 +165,7 @@ const AnalyticOverView = () => {
               onClick={backButtonHandler}
             />
           )}{" "}
-          Organization production dip trend (Lower the better)
+          {showGraph && heading}
         </p>
 
         <div className="SecondSection">
@@ -235,9 +182,9 @@ const AnalyticOverView = () => {
           >
             <div
               style={{ width: "600px", height: "300px" }}
-              onClick={chartHandler}
+              // onClick={chartHandler}
             >
-              {showGraph&&<LineChart chartData={userData} />}
+              {showGraph && <LineChart chartData={userData}  OptionsVal={Options}/>}
             </div>
           </div>
           <div
@@ -250,24 +197,25 @@ const AnalyticOverView = () => {
             }}
           >
             <div style={{ padding: "25px", fontSize: "16px" }}>
-              {showGraph&&insights.map((val) => {
-                return (
-                  <p style={{ color: val.color }}>
-                    {" "}
-                    <span
-                      style={{
-                        backgroundColor: val.color,
-                        width: "5px",
-                        height: "5px",
-                        marginRight: "2px",
-                      }}
-                    >
-                      ..
-                    </span>
-                    {val.insight}
-                  </p>
-                );
-              })}
+              {showGraph &&
+                insights.map((val,ind) => {
+                  return (
+                    <p style={{ color: val.color }} key={ind}>
+                      {" "}
+                      <span
+                        style={{
+                          backgroundColor: val.color,
+                          width: "5px",
+                          height: "5px",
+                          marginRight: "2px",
+                        }}
+                      >
+                        ..
+                      </span>
+                      {val.insight}
+                    </p>
+                  );
+                })}
             </div>
           </div>
         </div>
