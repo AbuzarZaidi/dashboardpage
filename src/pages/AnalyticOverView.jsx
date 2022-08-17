@@ -12,7 +12,7 @@ import LineChart from "../components/LineChart";
 const { readGraphData, readDataById } = require("../functions/graph");
 const AnalyticOverView = () => {
   const dispatch = useDispatch();
-  const graphData = useSelector((state) => state.graphData.lineGraph);
+  // const graphData = useSelector((state) => state.graphData.lineGraph);
   const insights = useSelector((state) => state.graphData.insights);
   const heading = useSelector((state) => state.graphData.heading);
   const [show, setShow] = useState(false);
